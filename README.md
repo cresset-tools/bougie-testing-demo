@@ -93,6 +93,6 @@ picked up by the same suite automatically.
 
 Heads-up when running other upstream suites: a few assert
 stock-Magento specifics — e.g. `Magento/Cms`'s `testGetConfigCssUrls`
-expects the stock admin-theme path and fails against Mage-OS 3.1's own
+expects the stock admin-theme path and fails against Mage-OS's own
 `MageOS/m137-admin-theme`. That's an upstream testsuite gap, not an
 environment issue.

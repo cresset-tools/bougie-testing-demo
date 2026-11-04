@@ -2,9 +2,9 @@
   "name": "mage-os/project-community-edition",
   "description": "Mage-OS project tailored with mageos-maker",
   "require": {
-    "mage-os/composer-dependency-version-audit-plugin": "3.1.0",
-    "mage-os/composer-root-update-plugin": "3.1.0",
-    "mage-os/product-community-edition": "3.1.0"
+    "mage-os/composer-dependency-version-audit-plugin": "4.0.0",
+    "mage-os/composer-root-update-plugin": "4.0.0",
+    "mage-os/product-community-edition": "4.0.0"
   },
   "require-dev": {
     "allure-framework/allure-phpunit": "^3.2",
@@ -12,8 +12,8 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7 || ^1.0",
     "dg/bypass-finals": "^1.4",
     "friendsofphp/php-cs-fixer": "^3.22",
-    "mage-os/magento-coding-standard": "3.1.0",
-    "mage-os/magento2-functional-testing-framework": "3.1.0",
+    "mage-os/magento-coding-standard": "4.0.0",
+    "mage-os/magento2-functional-testing-framework": "4.0.0",
     "pdepend/pdepend": "^3@dev",
     "phpmd/phpmd": "^3@dev",
     "phpstan/phpstan": "^1.9",
