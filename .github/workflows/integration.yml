@@ -25,15 +25,39 @@ jobs:
       - name: Start services
         run: bougie service up
 
+      # magecommand writes the compiled DI config and generated classes in
+      # ~2s, without booting Magento. Installed as a bougie tool (into
+      # ~/.local/bin, already on the runner's PATH).
+      - name: Install magecommand
+        run: |
+          bougie tool install cresset/magecommand@0.24.1
+          magecommand --version
+
+      # The test framework never runs setup:di:compile, but Magento uses a
+      # compiled DI config whenever generated/metadata/global.php exists under
+      # the project root, in every sandbox (only generated/code is per-sandbox).
+      # That skips merging di.xml on every boot: the Directory suite goes from
+      # ~23s to ~15s locally.
+      #
+      # The project root is never installed itself, so there is no config.php:
+      # --all-modules enables every module in the order the sandbox install
+      # writes them, and --extra-app-code adds the TestModule* fixtures as if
+      # the test bootstrap had already copied them into app/code.
+      - name: Compile DI config (magecommand)
+        run: >-
+          magecommand di compile --all-modules
+          --extra-app-code dev/tests/integration/_files
+
       # The Directory suite is a real slice of the Mage-OS integration
       # testsuite (246 tests: admin controllers, ACL, currency import);
       # the framework bootstrap installs a fresh test app into the
-      # project's tenant database first.
+      # project's tenant database first. phpunit.xml is phpunit.xml.dist
+      # with TESTS_MAGENTO_MODE=production.
       - name: Run Mage-OS integration tests
         working-directory: dev/tests/integration
         run: >-
           bougie run -- php ../../../vendor/bin/phpunit
-          -c phpunit.xml.dist testsuite/Magento/Directory
+          -c phpunit.xml testsuite/Magento/Directory
 
       - name: Stop services
         if: always()

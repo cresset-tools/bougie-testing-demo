@@ -39,8 +39,28 @@ on any machine:
 $ bougie service up
 $ cd dev/tests/integration
 $ bougie run -- php ../../../vendor/bin/phpunit \
-    -c phpunit.xml.dist testsuite/Magento/Directory
+    -c phpunit.xml testsuite/Magento/Directory
 ```
+
+[dev/tests/integration/phpunit.xml](dev/tests/integration/phpunit.xml)
+is the stock `phpunit.xml.dist` with `TESTS_MAGENTO_MODE=production`.
+Before the tests, CI writes the compiled DI config with
+[magecommand](https://github.com/cresset-tools/magequery):
+
+```console
+$ magecommand di compile --all-modules --extra-app-code dev/tests/integration/_files
+```
+
+It takes about 2s and doesn't boot Magento. The test framework never
+compiles DI itself, but Magento uses a compiled config whenever
+`generated/metadata/global.php` exists under the project root, so every
+test sandbox skips merging `di.xml` on boot. That takes the Directory suite
+from about 23s to about 15s. `--all-modules` stands in for the
+`config.php` this root never gets (every module enabled, in the order the
+sandbox install writes them), and `--extra-app-code` includes the
+`TestModule*` fixtures the test bootstrap deploys into `app/code`.
+Without the compile step the tests still run in production mode, just
+without that speedup.
 
 The socket wiring lives entirely in the test-framework setup:
 [install-config-mysql.php](dev/tests/integration/etc/install-config-mysql.php)
